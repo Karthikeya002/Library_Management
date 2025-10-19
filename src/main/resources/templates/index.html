@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibraryPro | Modern Library Management</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+        }
+        
+        /* Enhanced Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Glass Sidebar */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+            min-height: calc(100vh - 80px);
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            z-index: -1;
+        }
+        
+        .sidebar .nav-link {
+            color: var(--gray);
+            padding: 1rem 1.5rem;
+            margin: 0.25rem 1rem;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .sidebar .nav-link:hover::before {
+            left: 100%;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+        
+        .sidebar .nav-link.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            margin-right: 12px;
+            font-size: 1.1em;
+        }
+        
+        /* Content Sections */
+        .content-section {
+            display: none;
+            padding: 2rem;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Glass Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+        }
+        
+        .glass-card:hover .card-header::after {
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+        
+        /* Enhanced Statistics Cards */
+        .stat-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, rgba(99, 102, 241, 0.1), transparent);
+            animation: rotate 4s linear infinite;
+        }
+        
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .stat-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+        
+        /* Enhanced Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+        
+        /* Enhanced Tables */
+        .table-glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .table-glass thead th {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 1.25rem;
+        }
+        
+        .table-glass tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .table-glass tbody tr:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.01);
+        }
+        
+        .table-glass tbody td {
+            padding: 1.25rem;
+            vertical-align: middle;
+            border: none;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .status-available {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .status-borrowed {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        /* Enhanced Search */
+        .search-glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-glass:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+        
+        /* Loading Animation */
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Toast Notifications */
+        .toast-glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Dashboard Hero */
+        .dashboard-hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.05)" points="0,1000 1000,0 1000,1000"/></svg>');
+        }
+        
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+        
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.5);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                min-height: auto;
+                margin-bottom: 1rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .dashboard-hero {
+                padding: 1.5rem;
+            }
+            
+            .content-section {
+                padding: 1rem;
+            }
+        }
+        
+        /* Custom Animations */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.6s ease-out;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-book-reader me-2"></i> 
+                LibraryPro
+            </a>
+            <div class="d-flex align-items-center">
+                <button class="btn btn-outline-primary btn-sm me-3" id="refreshData">
+                    <i class="fas fa-sync-alt me-2"></i> Refresh
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-2"></i> Admin
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Enhanced Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0">
+                <ul class="nav flex-column mt-4">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="books">
+                            <i class="fas fa-book"></i> Books
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="members">
+                            <i class="fas fa-users"></i> Members
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="borrowing">
+                            <i class="fas fa-exchange-alt"></i> Transactions
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 px-4 py-4">
+                <!-- Enhanced Dashboard Section -->
+                <div id="dashboard" class="content-section active">
+                    <div class="dashboard-hero text-white">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h1 class="display-5 fw-bold mb-3">Welcome to LibraryPro</h1>
+                                <p class="lead mb-4">Manage your library efficiently with real-time insights and analytics</p>
+                                <div class="d-flex gap-3">
+                                    <button class="btn btn-light btn-lg">
+                                        <i class="fas fa-rocket me-2"></i> Quick Start
+                                    </button>
+                                    <button class="btn btn-outline-light btn-lg">
+                                        <i class="fas fa-graduation-cap me-2"></i> Tutorial
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <i class="fas fa-book-open display-1 opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced Statistics -->
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <i class="fas fa-book fa-2x mb-3 text-primary"></i>
+                                <div class="stat-number" id="totalBooks">0</div>
+                                <div class="stat-label">Total Books</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <i class="fas fa-check-circle fa-2x mb-3 text-success"></i>
+                                <div class="stat-number" id="availableBooks">0</div>
+                                <div class="stat-label">Available</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <i class="fas fa-users fa-2x mb-3 text-warning"></i>
+                                <div class="stat-number" id="totalMembers">0</div>
+                                <div class="stat-label">Members</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <i class="fas fa-hand-holding fa-2x mb-3 text-danger"></i>
+                                <div class="stat-number" id="borrowedBooks">0</div>
+                                <div class="stat-label">Borrowed</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced Content Cards -->
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="glass-card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-clock me-2"></i>Recent Activity
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="recentBooksList" class="p-2">
+                                        <div class="text-center text-muted py-5">
+                                            <div class="loading-spinner mx-auto mb-3"></div>
+                                            <p>Loading recent activity...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="glass-card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-chart-line me-2"></i>Quick Stats
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container p-3">
+                                        <canvas id="quickStatsChart" height="250"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Books Management Section -->
+                <div id="books" class="content-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-light">Books Inventory</h2>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookModal">
+                            <i class="fas fa-plus me-2"></i> Add New Book
+                        </button>
+                    </div>
+                    
+                    <div class="glass-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-list-ul me-2"></i>All Books</span>
+                            <div class="search-box" style="width: 350px;">
+                                <i class="fas fa-search"></i>
+                                <input type="text" class="form-control search-glass" id="bookSearch" placeholder="Search title, author, or genre...">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-glass table-hover align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Title</th>
+                                            <th>Author</th>
+                                            <th>ISBN</th>
+                                            <th>Genre</th>
+                                            <th>Year</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="booksTableBody">
+                                        <tr><td colspan="8" class="text-center text-muted py-4">Loading books...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Members Management Section -->
+                <div id="members" class="content-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-light">Member Directory</h2>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+                            <i class="fas fa-user-plus me-2"></i> Add New Member
+                        </button>
+                    </div>
+                    
+                    <div class="glass-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-address-book me-2"></i>Registered Members</span>
+                            <div class="search-box" style="width: 350px;">
+                                <i class="fas fa-search"></i>
+                                <input type="text" class="form-control search-glass" id="memberSearch" placeholder="Search by name or email...">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-glass table-hover align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Member Since</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="membersTableBody">
+                                        <tr><td colspan="7" class="text-center text-muted py-4">Loading members...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Borrow & Return Section -->
+                <div id="borrowing" class="content-section">
+                    <h2 class="mb-4 fw-light">Transaction Center</h2>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="glass-card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-arrow-alt-circle-right me-2"></i>Issue a Book
+                                </div>
+                                <div class="card-body">
+                                    <form id="borrowBookForm">
+                                        <div class="mb-3">
+                                            <label for="borrowMember" class="form-label fw-bold">Select Member</label>
+                                            <select class="form-select search-glass" id="borrowMember" required>
+                                                <option value="">Choose a member...</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="borrowBook" class="form-label fw-bold">Select Available Book</label>
+                                            <select class="form-select search-glass" id="borrowBook" required>
+                                                <option value="">Choose a book...</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-success w-100 mt-2">
+                                            <i class="fas fa-hand-holding me-2"></i>Issue Book
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="glass-card h-100">
+                                <div class="card-header">
+                                    <i class="fas fa-arrow-alt-circle-left me-2"></i>Receive a Return
+                                </div>
+                                <div class="card-body">
+                                    <form id="returnBookForm">
+                                        <div class="mb-3">
+                                            <label for="returnRecord" class="form-label fw-bold">Select Active Borrow Record</label>
+                                            <select class="form-select search-glass" id="returnRecord" required>
+                                                <option value="">Choose a record...</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100 mt-2">
+                                            <i class="fas fa-undo me-2"></i> Complete Return
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card mt-5">
+                        <div class="card-header">
+                            <i class="fas fa-clipboard-list me-2"></i>Active Borrowings Log
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-glass table-hover align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Record ID</th>
+                                            <th>Book Title</th>
+                                            <th>Member Name</th>
+                                            <th>Borrow Date</th>
+                                            <th>Due Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="currentBorrowingsTable">
+                                        <tr><td colspan="6" class="text-center text-muted py-4">Loading active borrowings...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Loading Indicator -->
+                <div id="loadingIndicator" class="text-center py-5">
+                    <div class="loading-spinner mx-auto mb-3"></div>
+                    <p class="text-muted">Loading amazing content...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" data-bs-toggle="modal" data-bs-target="#quickActionModal">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Quick Action Modal -->
+    <div class="modal fade" id="quickActionModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card">
+                <div class="modal-header">
+                    <h5 class="modal-title">Quick Actions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <button class="btn btn-primary w-100 h-100 p-3" data-bs-toggle="modal" data-bs-target="#addBookModal">
+                                <i class="fas fa-book fa-2x mb-2"></i>
+                                <div>Add Book</div>
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-success w-100 h-100 p-3" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+                                <i class="fas fa-user-plus fa-2x mb-2"></i>
+                                <div>Add Member</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Book Modal -->
+    <div class="modal fade" id="addBookModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content glass-card">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Add New Book</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addBookForm">
+                        <div class="mb-3">
+                            <label for="bookTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control search-glass" id="bookTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookAuthor" class="form-label">Author</label>
+                            <input type="text" class="form-control search-glass" id="bookAuthor" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookIsbn" class="form-label">ISBN</label>
+                            <input type="text" class="form-control search-glass" id="bookIsbn" placeholder="Optional">
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookGenre" class="form-label">Genre</label>
+                            <input type="text" class="form-control search-glass" id="bookGenre" placeholder="e.g., Fiction, Science, etc.">
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookYear" class="form-label">Publication Year</label>
+                            <input type="number" class="form-control search-glass" id="bookYear" min="1000" max="2030" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveBookBtn">
+                        <i class="fas fa-save me-2"></i> Save Book
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Member Modal -->
+    <div class="modal fade" id="addMemberModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content glass-card">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Add New Member</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMemberForm">
+                        <div class="mb-3">
+                            <label for="memberFirstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control search-glass" id="memberFirstName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="memberLastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control search-glass" id="memberLastName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="memberEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control search-glass" id="memberEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="memberPhone" class="form-label">Phone</label>
+                            <input type="text" class="form-control search-glass" id="memberPhone" placeholder="Optional">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveMemberBtn">
+                        <i class="fas fa-save me-2"></i> Save Member
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Toast -->
+    <div class="toast toast-glass" id="notificationToast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto" id="toastTitle">Notification</strong>
+            <small class="text-muted">just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="toastMessage">
+            Welcome to LibraryPro!
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Base URL for API - adjust according to your backend
+        const API_BASE_URL = 'http://localhost:8080/api';
+        
+        // DOM Elements
+        const contentSections = document.querySelectorAll('.content-section');
+        const sidebarLinks = document.querySelectorAll('.sidebar .nav-link');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const notificationToast = new bootstrap.Toast(document.getElementById('notificationToast'), { autohide: true, delay: 5000 });
+        
+        // Show a section and hide others
+        function showSection(sectionId) {
+            contentSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update active link in sidebar
+            sidebarLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === sectionId) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Load data for the section
+            loadSectionData(sectionId);
+        }
+        
+        // Load data for a specific section
+        function loadSectionData(sectionId) {
+            showLoading(true);
+            
+            // Use a slight delay to allow the loading animation to be seen
+            setTimeout(() => {
+                switch(sectionId) {
+                    case 'dashboard':
+                        loadDashboardData();
+                        break;
+                    case 'books':
+                        loadBooksData();
+                        break;
+                    case 'members':
+                        loadMembersData();
+                        break;
+                    case 'borrowing':
+                        loadBorrowingData();
+                        break;
+                }
+            }, 300); 
+        }
+        
+        // Show/hide loading indicator
+        function showLoading(show) {
+            loadingIndicator.style.display = show ? 'flex' : 'none';
+        }
+        
+        // Show notification toast
+        function showNotification(title, message, type = 'info') {
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            
+            const toastHeader = document.querySelector('#notificationToast .toast-header');
+            // Dynamically set header color based on type
+            toastHeader.className = `toast-header ${type === 'success' ? 'bg-success' : type === 'error' ? 'bg-danger' : 'bg-primary'} text-white`;
+            
+            notificationToast.show();
+        }
+        
+        // API Calls
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+            
+            if (data && (method === 'POST' || method === 'PUT')) {
+                options.body = JSON.stringify(data);
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    // Attempt to parse JSON error message if possible
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        throw new Error(`API error: ${response.status} - ${errorJson.message || 'Unknown error'}`);
+                    } catch {
+                        throw new Error(`API error: ${response.status} - ${errorText.substring(0, 100)}...`);
+                    }
+                }
+                
+                const contentLength = response.headers.get('content-length');
+                if (contentLength === '0' || response.status === 204) {
+                    return null;
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('API call failed:', error);
+                showNotification('Connection Error', `Failed to connect: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+        
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const [books, members, currentBorrowings] = await Promise.all([
+                    apiCall('/books').catch(() => []),
+                    apiCall('/members').catch(() => []),
+                    apiCall('/borrowing/current').catch(() => [])
+                ]);
+                
+                // Update statistics
+                const totalBooks = books ? books.length : 0;
+                const availableBooks = books ? books.filter(b => b.isAvailable).length : 0;
+                const totalMembers = members ? members.length : 0;
+                const borrowedBooks = currentBorrowings ? currentBorrowings.length : 0;
+
+                // Simple counter animation for stats
+                function animateValue(id, start, end, duration) {
+                    const obj = document.getElementById(id);
+                    let startTimestamp = null;
+                    const step = (timestamp) => {
+                        if (!startTimestamp) startTimestamp = timestamp;
+                        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                        obj.textContent = Math.floor(progress * (end - start) + start);
+                        if (progress < 1) {
+                            window.requestAnimationFrame(step);
+                        }
+                    };
+                    window.requestAnimationFrame(step);
+                }
+
+                animateValue('totalBooks', 0, totalBooks, 500);
+                animateValue('availableBooks', 0, availableBooks, 500);
+                animateValue('totalMembers', 0, totalMembers, 500);
+                animateValue('borrowedBooks', 0, borrowedBooks, 500);
+                
+                // Update recent books
+                const recentBooksList = document.getElementById('recentBooksList');
+                if (!books || books.length === 0) {
+                    recentBooksList.innerHTML = '<div class="text-center text-muted py-4">No books available</div>';
+                } else {
+                    const recentBooks = books.slice(-5).reverse();
+                    recentBooksList.innerHTML = recentBooks.map(book => `
+                        <div class="recent-list-item d-flex justify-content-between align-items-center mb-2 p-3 rounded">
+                            <div>
+                                <h6 class="mb-0 fw-bold">${book.title}</h6>
+                                <small class="text-muted">by ${book.author} (${book.publicationYear})</small>
+                            </div>
+                            <span class="badge ${book.isAvailable ? 'bg-success' : 'bg-danger'}">
+                                ${book.isAvailable ? 'Available' : 'Borrowed'}
+                            </span>
+                        </div>
+                    `).join('');
+                }
+                
+                // Update recent borrowing activity
+                const recentBorrowing = document.getElementById('recentBorrowing');
+                if (!currentBorrowings || currentBorrowings.length === 0) {
+                    recentBorrowing.innerHTML = '<div class="text-center text-muted py-4">No recent activity</div>';
+                } else {
+                    recentBorrowing.innerHTML = currentBorrowings.slice(-5).reverse().map(record => `
+                        <div class="recent-list-item d-flex justify-content-between align-items-center mb-2 p-3 rounded">
+                            <div>
+                                <h6 class="mb-0">${record.book.title}</h6>
+                                <small class="text-muted">Borrowed by ${record.member.firstName} ${record.member.lastName}</small>
+                            </div>
+                            <small class="text-secondary">${new Date(record.borrowDate).toLocaleDateString()}</small>
+                        </div>
+                    `).join('');
+                }
+                
+                // Initialize chart
+                initializeChart(availableBooks, borrowedBooks, totalBooks - availableBooks - borrowedBooks);
+                
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Initialize chart for dashboard
+        function initializeChart(available, borrowed, other) {
+            const ctx = document.getElementById('quickStatsChart').getContext('2d');
+            const quickStatsChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Available', 'Borrowed', 'Other'],
+                    datasets: [{
+                        data: [available, borrowed, other],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(156, 163, 175, 0.8)'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#6b7280',
+                                font: {
+                                    family: 'Inter',
+                                    size: 12
+                                },
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#1f2937',
+                            bodyColor: '#4b5563',
+                            borderColor: 'rgba(229, 231, 235, 0.5)',
+                            borderWidth: 1,
+                            cornerRadius: 8
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+        
+        // Helper function for rendering table rows (used by all table loading functions)
+        function renderTableRows(data, tableBodyId, columnCount, rowMapper) {
+            const tableBody = document.getElementById(tableBodyId);
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="${columnCount}" class="text-center text-muted py-4">No records found.</td></tr>`;
+            } else {
+                tableBody.innerHTML = data.map(rowMapper).join('');
+            }
+        }
+
+        // Load books data
+        async function loadBooksData() {
+            try {
+                const books = await apiCall('/books');
+                renderTableRows(books, 'booksTableBody', 8, book => `
+                    <tr>
+                        <td>${book.id}</td>
+                        <td class="fw-bold">${book.title}</td>
+                        <td>${book.author}</td>
+                        <td>${book.isbn || '<em class="text-muted">N/A</em>'}</td>
+                        <td>${book.genre || '<em class="text-muted">N/A</em>'}</td>
+                        <td>${book.publicationYear}</td>
+                        <td>
+                            <span class="status-badge ${book.isAvailable ? 'status-available' : 'status-borrowed'}">
+                                <i class="fas ${book.isAvailable ? 'fa-check-circle' : 'fa-times-circle'} me-1"></i>
+                                ${book.isAvailable ? 'Available' : 'Borrowed'}
+                            </span>
+                        </td>
+                        <td class="action-buttons">
+                            <button class="btn btn-sm btn-outline-primary" onclick="editBook(${book.id})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteBook(${book.id})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            } catch (error) {
+                renderTableRows(null, 'booksTableBody', 8, null);
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Load members data
+        async function loadMembersData() {
+            try {
+                const members = await apiCall('/members');
+                renderTableRows(members, 'membersTableBody', 7, member => `
+                    <tr>
+                        <td>${member.id}</td>
+                        <td class="fw-bold">${member.firstName}</td>
+                        <td>${member.lastName}</td>
+                        <td>${member.email}</td>
+                        <td>${member.phone || '<em class="text-muted">N/A</em>'}</td>
+                        <td>${new Date(member.membershipDate).toLocaleDateString()}</td>
+                        <td class="action-buttons">
+                            <button class="btn btn-sm btn-outline-primary" onclick="editMember(${member.id})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteMember(${member.id})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            } catch (error) {
+                renderTableRows(null, 'membersTableBody', 7, null);
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Load borrowing data
+        async function loadBorrowingData() {
+            try {
+                const [members, books, currentBorrowings] = await Promise.all([
+                    apiCall('/members').catch(() => []),
+                    apiCall('/books').catch(() => []),
+                    apiCall('/borrowing/current').catch(() => [])
+                ]);
+                
+                // Populate borrow member dropdown
+                const borrowMemberSelect = document.getElementById('borrowMember');
+                borrowMemberSelect.innerHTML = '<option value="">Choose a member...</option>' +
+                    (members ? members.map(member => 
+                        `<option value="${member.id}">${member.firstName} ${member.lastName} (${member.email})</option>`
+                    ).join('') : '');
+                
+                // Populate borrow book dropdown (only available books)
+                const borrowBookSelect = document.getElementById('borrowBook');
+                const availableBooks = books ? books.filter(book => book.isAvailable) : [];
+                borrowBookSelect.innerHTML = '<option value="">Choose a book...</option>' +
+                    availableBooks.map(book => 
+                        `<option value="${book.id}">${book.title} by ${book.author}</option>`
+                    ).join('');
+                
+                // Populate return record dropdown
+                const returnRecordSelect = document.getElementById('returnRecord');
+                returnRecordSelect.innerHTML = '<option value="">Choose a record...</option>' +
+                    (currentBorrowings ? currentBorrowings.map(record => 
+                        `<option value="${record.id}">${record.book.title} - ${record.member.firstName} ${record.member.lastName} (Due: ${new Date(record.dueDate).toLocaleDateString()})</option>`
+                    ).join('') : '');
+                
+                // Populate current borrowings table
+                renderTableRows(currentBorrowings, 'currentBorrowingsTable', 6, record => {
+                    const dueDate = new Date(record.dueDate);
+                    const isOverdue = dueDate < new Date() && record.status === 'BORROWED';
+                    const statusClass = isOverdue ? 'bg-danger' : record.status === 'BORROWED' ? 'bg-warning text-dark' : 'bg-primary';
+
+                    return `
+                        <tr>
+                            <td>${record.id}</td>
+                            <td class="fw-bold">${record.book.title}</td>
+                            <td>${record.member.firstName} ${record.member.lastName}</td>
+                            <td>${new Date(record.borrowDate).toLocaleDateString()}</td>
+                            <td>${dueDate.toLocaleDateString()}</td>
+                            <td>
+                                <span class="badge ${statusClass}">${isOverdue ? 'OVERDUE' : record.status}</span>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+            } catch (error) {
+                renderTableRows(null, 'currentBorrowingsTable', 6, null);
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Add new book
+        document.getElementById('saveBookBtn').addEventListener('click', async function() {
+            const form = document.getElementById('addBookForm');
+            const formData = {
+                title: document.getElementById('bookTitle').value,
+                author: document.getElementById('bookAuthor').value,
+                isbn: document.getElementById('bookIsbn').value || null,
+                genre: document.getElementById('bookGenre').value || null,
+                publicationYear: parseInt(document.getElementById('bookYear').value),
+                isAvailable: true
+            };
+            if (!formData.title || !formData.author || !formData.publicationYear) {
+                showNotification('Validation', 'Please fill in all required fields.', 'error');
+                return;
+            }
+            
+            try {
+                await apiCall('/books', 'POST', formData);
+                bootstrap.Modal.getInstance(document.getElementById('addBookModal')).hide();
+                form.reset();
+                showNotification('Success', 'Book added successfully!', 'success');
+                loadBooksData();
+                loadDashboardData();
+            } catch (error) {
+                showNotification('Error', 'Failed to add book. Check console for details.', 'error');
+            }
+        });
+        
+        // Add new member
+        document.getElementById('saveMemberBtn').addEventListener('click', async function() {
+            const form = document.getElementById('addMemberForm');
+            const formData = {
+                firstName: document.getElementById('memberFirstName').value,
+                lastName: document.getElementById('memberLastName').value,
+                email: document.getElementById('memberEmail').value,
+                phone: document.getElementById('memberPhone').value || null
+            };
+            
+            if (!formData.firstName || !formData.lastName || !formData.email) {
+                showNotification('Validation', 'Please fill in all required fields.', 'error');
+                return;
+            }
+
+            try {
+                await apiCall('/members', 'POST', formData);
+                bootstrap.Modal.getInstance(document.getElementById('addMemberModal')).hide();
+                form.reset();
+                showNotification('Success', 'Member added successfully!', 'success');
+                loadMembersData();
+                loadDashboardData();
+            } catch (error) {
+                showNotification('Error', 'Failed to add member. Email might already exist.', 'error');
+            }
+        });
+        
+        // Borrow book
+        document.getElementById('borrowBookForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const memberId = document.getElementById('borrowMember').value;
+            const bookId = document.getElementById('borrowBook').value;
+            
+            if (!memberId || !bookId) {
+                showNotification('Validation', 'Please select both a member and a book.', 'error');
+                return;
+            }
+            
+            try {
+                await apiCall(`/borrowing/borrow?bookId=${bookId}&memberId=${memberId}`, 'POST');
+                document.getElementById('borrowBookForm').reset();
+                showNotification('Success', 'Book issued successfully! (Due in 14 days)', 'success');
+                loadBorrowingData();
+                loadDashboardData();
+                loadBooksData();
+            } catch (error) {
+                showNotification('Error', 'Failed to issue book. Check availability or member limits.', 'error');
+            }
+        });
+        
+        // Return book
+        document.getElementById('returnBookForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const recordId = document.getElementById('returnRecord').value;
+            
+            if (!recordId) {
+                showNotification('Validation', 'Please select an active borrow record.', 'error');
+                return;
+            }
+            
+            try {
+                await apiCall(`/borrowing/return/${recordId}`, 'POST');
+                document.getElementById('returnBookForm').reset();
+                showNotification('Success', 'Book returned successfully!', 'success');
+                loadBorrowingData();
+                loadDashboardData();
+                loadBooksData();
+            } catch (error) {
+                showNotification('Error', 'Failed to return book. Please try again.', 'error');
+            }
+        });
+        
+        // Placeholder functions for edit and delete operations
+        function editBook(bookId) {
+            showNotification('Info', `Edit feature: Book ID ${bookId}. Not implemented yet.`, 'info');
+        }
+        
+        function deleteBook(bookId) {
+            if (confirm('Are you sure you want to delete this book? This action cannot be undone.')) {
+                showNotification('Info', `Delete feature: Deleting Book ID ${bookId}. Not implemented yet.`, 'info');
+                // You would typically call an API here: apiCall(`/books/${bookId}`, 'DELETE').then(...)
+            }
+        }
+        
+        function editMember(memberId) {
+            showNotification('Info', `Edit feature: Member ID ${memberId}. Not implemented yet.`, 'info');
+        }
+        
+        function deleteMember(memberId) {
+            if (confirm('Are you sure you want to delete this member? All associated borrowing records will also be affected.')) {
+                showNotification('Info', `Delete feature: Deleting Member ID ${memberId}. Not implemented yet.`, 'info');
+                // You would typically call an API here: apiCall(`/members/${memberId}`, 'DELETE').then(...)
+            }
+        }
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sidebar navigation
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showSection(this.getAttribute('data-section'));
+                });
+            });
+            
+            // Refresh data
+            document.getElementById('refreshData').addEventListener('click', function(e) {
+                e.preventDefault();
+                const activeSection = document.querySelector('.content-section.active').id;
+                loadSectionData(activeSection);
+                showNotification('Refresh', 'Data reload initiated.', 'info');
+            });
+            
+            // Search functionality (simple client-side filter)
+            function setupSearch(inputId, tableBodyId) {
+                document.getElementById(inputId).addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const rows = document.querySelectorAll(`#${tableBodyId} tr`);
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(searchTerm) ? '' : 'none';
+                    });
+                });
+            }
+            setupSearch('bookSearch', 'booksTableBody');
+            setupSearch('memberSearch', 'membersTableBody');
+            
+            // Load initial data
+            loadDashboardData();
+        });
+    </script>
+</body>
+</html>
